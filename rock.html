@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Rock Paper Scissors</title>
+   
+</head>
+<body>
+    <section class="container">
+        <div class="title">Rock Paper Scissors Game</div>
+        <div class="result_field">
+            <div class="result_images">
+                <span class="user_result">
+                    <img src="rock (1).png" alt="User Choice">
+                </span>
+                <span class="cpu_result">
+                    <img src="paper1.png" alt="CPU Choice">
+                </span>
+            </div>
+            <div class="result">Let's Play!!</div>
+        </div>
+
+        <div class="option_images">
+            <span class="option_image" data-choice="R">
+                <img src="rock.png" alt="Rock">
+                <p>Rock</p>
+            </span>
+            <span class="option_image" data-choice="P">
+                <img src="paper.png" alt="Paper">
+                <p>Paper</p>
+            </span>
+            <span class="option_image" data-choice="S">
+                <img src="images.png" alt="Scissors">
+                <p>Scissors</p>
+            </span>
+        </div>
+    </section>
+
+    <script>
+        let userResult = document.querySelector(".user_result img"),
+            cpuResult = document.querySelector(".cpu_result img"),
+            result = document.querySelector(".result"),
+            optionImages = document.querySelectorAll(".option_image");
+
+        optionImages.forEach((image) => {
+            image.addEventListener("click", (e) => {
+                // Remove active class from all options
+                optionImages.forEach(img => img.classList.remove("active"));
+
+                // Add active class to the clicked option
+                image.classList.add("active");
+
+                // Get the clicked option
+                let userChoice = image.getAttribute("data-choice");
+
+                // Set user image
+                userResult.src = image.querySelector("img").src;
+
+                // Generate CPU choice
+                let cpuChoices = ["R", "P", "S"];
+                let cpuChoice = cpuChoices[Math.floor(Math.random() * 3)];
+                let cpuImages = {
+                    "R": "rock.png",
+                    "P": "paper.png",
+                    "S": "images.png"
+                };
+                cpuResult.src = cpuImages[cpuChoice];
+
+                // Define outcomes
+                let outcomes = {
+                    "RR": "Draw",
+                    "PP": "Draw",
+                    "SS": "Draw",
+                    "RP": "Computer",
+                    "RS": "You",
+                    "PR": "You",
+                    "PS": "Computer",
+                    "SR": "Computer",
+                    "SP": "You"
+                };
+
+                // Determine winner
+                let outcomeText = outcomes[userChoice + cpuChoice];
+                result.textContent = userChoice === cpuChoice ? "Match Draw" : `${outcomeText} Won!!`;
+            });
+        });
+    </script>
+</body>
+</html>
+
