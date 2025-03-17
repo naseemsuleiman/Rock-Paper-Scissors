@@ -20,6 +20,7 @@
                 </span>
             </div>
             <div class="result">Let's Play!!</div>
+            <h2 style="color: black;" class="gametext" id="scoretext">SCORE - PLAYER: 0 | COMPUTER: 0</h2>
         </div>
 
         <div class="option_images">
@@ -39,25 +40,32 @@
     </section>
 
     <script>
+        let computerScore = 0;
+        let playerScore = 0;
+        let gameOver = false;
+    
         let userResult = document.querySelector(".user_result img"),
             cpuResult = document.querySelector(".cpu_result img"),
             result = document.querySelector(".result"),
-            optionImages = document.querySelectorAll(".option_image");
-
+            optionImages = document.querySelectorAll(".option_image"),
+            score = document.querySelector("#scoretext");
+    
         optionImages.forEach((image) => {
             image.addEventListener("click", (e) => {
+                if (gameOver) return; // Stop if the game is over
+    
                 // Remove active class from all options
                 optionImages.forEach(img => img.classList.remove("active"));
-
+    
                 // Add active class to the clicked option
                 image.classList.add("active");
-
+    
                 // Get the clicked option
                 let userChoice = image.getAttribute("data-choice");
-
+    
                 // Set user image
                 userResult.src = image.querySelector("img").src;
-
+    
                 // Generate CPU choice
                 let cpuChoices = ["R", "P", "S"];
                 let cpuChoice = cpuChoices[Math.floor(Math.random() * 3)];
@@ -67,7 +75,7 @@
                     "S": "images.png"
                 };
                 cpuResult.src = cpuImages[cpuChoice];
-
+    
                 // Define outcomes
                 let outcomes = {
                     "RR": "Draw",
@@ -80,12 +88,34 @@
                     "SR": "Computer",
                     "SP": "You"
                 };
-
+    
                 // Determine winner
                 let outcomeText = outcomes[userChoice + cpuChoice];
                 result.textContent = userChoice === cpuChoice ? "Match Draw" : `${outcomeText} Won!!`;
+    
+                // Update score
+                function updateScore(winner) {
+                    if (winner === "You") {
+                        playerScore++;
+                    } else if (winner === "Computer") {
+                        computerScore++;
+                    }
+    
+                    score.innerText = `SCORE - PLAYER: ${playerScore} | COMPUTER: ${computerScore}`;
+    
+                    // Check if someone reached 3 points
+                    if (playerScore === 3 || computerScore === 3) {
+                        gameOver = true;
+                        result.innerHTML = `<strong>Game Over! ${winner} Wins!</strong><br>Refresh to Play Again.`;
+                    }
+                }
+    
+                updateScore(outcomeText);
             });
         });
+    </script>
+    
+
     </script>
 </body>
 </html>
